@@ -1,7 +1,9 @@
 -- InventoryService
 -- Minimal Knit Service for inventory management
+
 local Knit = require(game:GetService("ReplicatedStorage"):WaitForChild("Knit"))
 local Signal = require(Knit.Util.Signal)
+local StarterInventory = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("StarterInventory"))
 
 local InventoryService = Knit.CreateService {
     Name = "InventoryService",
@@ -15,10 +17,20 @@ local InventoryService = Knit.CreateService {
 InventoryService.ItemAdded = Signal.new()
 InventoryService.ItemRemoved = Signal.new()
 
+
 local playerInventories = {}
+
 
 function InventoryService:GetInventory(player)
     return playerInventories[player] or {}
+end
+
+function InventoryService:SeedStarterInventory(player)
+    playerInventories[player] = playerInventories[player] or {}
+    for _, item in ipairs(StarterInventory) do
+        table.insert(playerInventories[player], item)
+        self.ItemAdded:Fire(player, item)
+    end
 end
 
 function InventoryService:AddItem(player, item)
@@ -52,5 +64,11 @@ end
 function InventoryService.Client:RemoveItem(player, item)
     return self.Server:RemoveItem(player, item)
 end
+
+
+-- Seed starter inventory for each tester on join
+game:GetService("Players").PlayerAdded:Connect(function(player)
+    InventoryService:SeedStarterInventory(player)
+end)
 
 return InventoryService
