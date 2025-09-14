@@ -1,0 +1,56 @@
+-- InventoryService
+-- Minimal Knit Service for inventory management
+local Knit = require(game:GetService("ReplicatedStorage"):WaitForChild("Knit"))
+local Signal = require(Knit.Util.Signal)
+
+local InventoryService = Knit.CreateService {
+    Name = "InventoryService",
+    Client = {
+        GetInventory = Knit.CreatePromiseFunction(),
+        AddItem = Knit.CreatePromiseFunction(),
+        RemoveItem = Knit.CreatePromiseFunction(),
+    }
+}
+
+InventoryService.ItemAdded = Signal.new()
+InventoryService.ItemRemoved = Signal.new()
+
+local playerInventories = {}
+
+function InventoryService:GetInventory(player)
+    return playerInventories[player] or {}
+end
+
+function InventoryService:AddItem(player, item)
+    playerInventories[player] = playerInventories[player] or {}
+    table.insert(playerInventories[player], item)
+    self.ItemAdded:Fire(player, item)
+    return true
+end
+
+function InventoryService:RemoveItem(player, item)
+    local inventory = playerInventories[player]
+    if not inventory then return false end
+    for i, v in ipairs(inventory) do
+        if v == item then
+            table.remove(inventory, i)
+            self.ItemRemoved:Fire(player, item)
+            return true
+        end
+    end
+    return false
+end
+
+function InventoryService.Client:GetInventory(player)
+    return self.Server:GetInventory(player)
+end
+
+function InventoryService.Client:AddItem(player, item)
+    return self.Server:AddItem(player, item)
+end
+
+function InventoryService.Client:RemoveItem(player, item)
+    return self.Server:RemoveItem(player, item)
+end
+
+return InventoryService
