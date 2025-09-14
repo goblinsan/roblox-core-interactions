@@ -1,17 +1,15 @@
 -- InventoryService
 -- Minimal Knit Service for inventory management
 
-local Knit = require(game:GetService("ReplicatedStorage"):WaitForChild("Knit"))
-local Signal = require(Knit.Util.Signal)
+local Knit = require(game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("knit"))
+local Signal = require(game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("signal"))
+print("[InventoryService] Signal module:", Signal)
+print("[InventoryService] Signal.new:", Signal and Signal.new)
 local StarterInventory = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("StarterInventory"))
 
 local InventoryService = Knit.CreateService {
     Name = "InventoryService",
-    Client = {
-        GetInventory = Knit.CreatePromiseFunction(),
-        AddItem = Knit.CreatePromiseFunction(),
-        RemoveItem = Knit.CreatePromiseFunction(),
-    }
+    Client = {}
 }
 
 InventoryService.ItemAdded = Signal.new()
@@ -26,11 +24,13 @@ function InventoryService:GetInventory(player)
 end
 
 function InventoryService:SeedStarterInventory(player)
+    print("[InventoryService] Seeding starter inventory for", player.Name)
     playerInventories[player] = playerInventories[player] or {}
     for _, item in ipairs(StarterInventory) do
         table.insert(playerInventories[player], item)
         self.ItemAdded:Fire(player, item)
     end
+    print("[InventoryService] Inventory after seeding:", playerInventories[player])
 end
 
 function InventoryService:AddItem(player, item)
@@ -68,6 +68,7 @@ end
 
 -- Seed starter inventory for each tester on join
 game:GetService("Players").PlayerAdded:Connect(function(player)
+    print("[InventoryService] PlayerAdded fired for", player.Name)
     InventoryService:SeedStarterInventory(player)
 end)
 

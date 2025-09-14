@@ -1,6 +1,6 @@
 -- InventoryController
 -- Minimal Knit Controller for inventory UI/interactions
-local Knit = require(game:GetService("ReplicatedStorage"):WaitForChild("Knit"))
+local Knit = require(game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("knit"))
 local Promise = require(Knit.Util.Promise)
 
 local InventoryController = Knit.CreateController { Name = "InventoryController" }
