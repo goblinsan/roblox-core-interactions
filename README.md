@@ -15,3 +15,17 @@ rojo serve
 ```
 
 For more help, check out [the Rojo documentation](https://rojo.space/docs).
+
+## Logger usage
+
+This project includes a small `Logger` helper at `src/shared/Logger.luau` with configurable log levels.
+
+- Default behavior: only `WARN` and `ERROR` messages are printed.
+- To change the log level at runtime (development only), call:
+
+```lua
+local Logger = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Logger"))
+Logger.setLevel("DEBUG") -- or "INFO", "WARN", "ERROR"
+```
+
+Use `DEBUG` while working locally to see additional diagnostic output, and switch back to `WARN` before committing.
