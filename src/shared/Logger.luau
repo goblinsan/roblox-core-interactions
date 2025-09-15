@@ -2,7 +2,8 @@
 -- Provides simple logging helpers. Debug is no-op by default; set DEBUG = true for development.
 
 local Logger = {}
-Logger.DEBUG = false
+-- Enable DEBUG during dev to help diagnose mapping/startup issues. Turn this off before production.
+Logger.DEBUG = true
 
 function Logger.debug(...)
     if Logger.DEBUG then

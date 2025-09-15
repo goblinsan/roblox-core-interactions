@@ -3,6 +3,9 @@
 
 local InventoryUI = {}
 
+local Logger = require(game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Logger"))
+Logger.info("InventoryUI module required at runtime:", script:GetFullName())
+
 function InventoryUI.init()
     local Players = game:GetService("Players")
     local Knit = require(game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("knit"))
