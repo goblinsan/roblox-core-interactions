@@ -8,31 +8,6 @@ local controllersFolder = script.Parent:FindFirstChild("Controllers") or script.
 Knit.AddControllersDeep(controllersFolder)
 
 Knit.Start():andThen(function()
-	-- Debug: print PlayerScripts children so we can diagnose why WaitForChild("UI") would yield.
-	Logger.debug("PlayerScripts children:")
-	for _, child in ipairs(script.Parent.Parent:GetChildren()) do
-		Logger.debug(" -", child.Name)
-	end
-
-	-- Also log the Client folder contents (where UI is expected)
-	Logger.debug("Client folder (script.Parent) name:", script.Parent.Name)
-	Logger.debug("Client children:")
-	for _, child in ipairs(script.Parent:GetChildren()) do
-		Logger.debug(" -", child.Name)
-	end
-
-	-- Extra: log more info about the 'Client' object Robox Studio has created
-	local clientObj = script.Parent.Parent:FindFirstChild("Client")
-	if clientObj then
-		Logger.debug("Found top-level 'Client' object under PlayerScripts. ClassName:", clientObj.ClassName)
-		Logger.debug("Top-level 'Client' children:")
-		for _, c2 in ipairs(clientObj:GetChildren()) do
-			Logger.debug(" --", c2.Name, "(", c2.ClassName, ")")
-		end
-	else
-		Logger.debug("No top-level 'Client' object found under PlayerScripts")
-	end
-
 	-- Locate the UI folder. Some Rojo mappings place `src/client` under a nested `Client` folder
 	-- inside PlayerScripts (e.g. PlayerScripts.Client.UI). Try both locations and fail fast.
 	local uiFolder = script.Parent:FindFirstChild("UI")
